@@ -28,6 +28,9 @@ export default class Customer {
   changeName(name: string) {
     this._name = name
   }
+  changeAddress(addres: Address) {
+    this._address = addres
+  }
   activate() {
     if(!this._address) throw new Error('Address is mandatory to activate a customer')
     this._active = true
@@ -37,9 +40,6 @@ export default class Customer {
   }
   isActive(): boolean {
     return this._active
-  }
-  set Address(address: Address) {
-    this._address = address
   }
   get Address(): Address {
     return this._address

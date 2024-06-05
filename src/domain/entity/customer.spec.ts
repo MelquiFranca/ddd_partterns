@@ -20,7 +20,7 @@ describe('Customer unit tests', () => {
   it('Should activate customer', () => {
     const customer = new Customer('12', 'Customer 1')
     const address = new Address('Street 1', 123, '13330-250', 'São Paulo')
-    customer.Address = address
+    customer.changeAddress(address)
     expect(customer.isActive()).toBe(false)
   })
   it('Should deactivate customer', () => {
@@ -31,7 +31,7 @@ describe('Customer unit tests', () => {
   it('Should activate customer', () => {
     const customer = new Customer('12', 'Customer 1')
     const address = new Address('Street 1', 123, '13330-250', 'São Paulo')
-    customer.Address = address
+    customer.changeAddress(address)
     customer.activate()
     expect(customer.isActive()).toBe(true)
   })

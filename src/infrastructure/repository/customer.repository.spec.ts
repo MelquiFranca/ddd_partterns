@@ -22,7 +22,7 @@ describe('Customer repository test', () => {
     it('should create a customer', async () => {
       const customerRepository = new CustomerRepository()
       const customer = new Customer('1', 'Customer 1')
-      customer.Address = new Address('street1', 123, '11111111', 'Rio de Janeiro')
+      customer.changeAddress(new Address('street1', 123, '11111111', 'Rio de Janeiro'))
       await customerRepository.create(customer)
       const customerModel = await CustomerModel.findOne({ where: { id: '1' } })
       expect(customerModel?.toJSON()).toStrictEqual({
@@ -39,7 +39,7 @@ describe('Customer repository test', () => {
     it('should find a customer', async () => {
       const customerRepository = new CustomerRepository()
       const customer = new Customer('1', 'Customer 1')
-      customer.Address = new Address('street1', 123, '11111111', 'Rio de Janeiro')
+      customer.changeAddress(new Address('street1', 123, '11111111', 'Rio de Janeiro'))
       await customerRepository.create(customer)
       const customerModel = await CustomerModel.findOne({ where: { id: '1' }})
       const foundCustomer = await customerRepository.find('1')
@@ -57,13 +57,17 @@ describe('Customer repository test', () => {
     it('should find all products', async () => {
       const customerRepository = new CustomerRepository()
       const customer1 = new Customer('1', 'Customer 1')
-      customer1.Address = new Address('street1', 123, '11111111', 'Rio de Janeiro')
+      customer1.changeAddress(new Address('street1', 123, '11111111', 'Rio de Janeiro'))
       await customerRepository.create(customer1)
       const customer2 = new Customer('2', 'Customer 2')
-      customer2.Address = new Address('street2', 321, '22222222', 'Rio de Janeiro')
+      customer2.changeAddress(new Address('street2', 321, '22222222', 'Rio de Janeiro'))
       await customerRepository.create(customer2)
       const foundProducts = await customerRepository.findAll()
       const products = [customer1, customer2]
       expect(foundProducts).toStrictEqual(products)
+    })
+    it('should returns error if customer not found', () => {
+      const customerRepository = new CustomerRepository()
+      expect(customerRepository.find('sunda')).rejects.toThrow('Customer not found')
     })
 })

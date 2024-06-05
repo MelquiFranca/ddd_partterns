@@ -35,18 +35,24 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
     )
   }
   async find(id: string): Promise<Customer> {
-    const customerModel = await CustomerModel.findOne({ where: { id } })
-    if (!customerModel) throw new Error('Customer not found')
-    const customer = new Customer(customerModel.id, customerModel.name)
-    customer.Address = new Address(customerModel.street, customerModel.number, customerModel.zip, customerModel.city)
-    return customer
+    try {
+      const customerModel = await CustomerModel.findOne({
+        where: { id },
+        rejectOnEmpty: true
+       })
+      const customer = new Customer(customerModel.id, customerModel.name)
+      customer.changeAddress(new Address(customerModel.street, customerModel.number, customerModel.zip, customerModel.city))
+      return customer
+    } catch (e) {
+      throw new Error('Customer not found')
+    }
   }
   async findAll(): Promise<Customer[]> {
     const customers = await CustomerModel.findAll()
     if(!customers?.length) throw new Error('Customers not found')
     return customers.map((customerItem) => {
       const customer = new Customer(customerItem.id, customerItem.name)
-      customer.Address = new Address(customerItem.street, customerItem.number, customerItem.zip, customerItem.city)
+      customer.changeAddress(new Address(customerItem.street, customerItem.number, customerItem.zip, customerItem.city))
       return customer
     })
   }
